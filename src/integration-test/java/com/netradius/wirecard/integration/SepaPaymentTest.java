@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
+ * Integration test for sepa transactions.
+ *
  * @author Erik R. Jensen
  */
 public class SepaPaymentTest {
@@ -23,7 +25,7 @@ public class SepaPaymentTest {
 	public void testSepa() throws IOException {
 		WirecardClient client = new WirecardClient(WirecardClient.TESTING_URL, username, password, merchantId);
 		WirecardPaymentResponse response = client.newSepaPayment()
-				.setRequestId(UUID.randomUUID().toString()) // randome request ID
+				.setRequestId(UUID.randomUUID().toString()) // random request ID
 				.setBic("WIREDEMMXXX") // from examples in doc
 				.setIban("DE42512308000000060004") // from examples in doc
 				.setCreditorId("DE98ZZZ09999999999") // from examples in doc
