@@ -11,6 +11,7 @@ import javax.xml.bind.JAXBException;
  * @author Erik R. Jensen
  */
 public class WirecardClient {
+	//TODO we need to support authorize transaction?
 	public static final String TESTING_URL = "https://api-test.wirecard.com/engine/rest/paymentmethods/";
 	public static final String PRODUCTION_URL = "https://api.wirecard.com/engine/rest/paymentmethods/";
 
@@ -18,7 +19,7 @@ public class WirecardClient {
 	protected HttpClient httpClient;
 	protected String merchantId;
 	protected JAXBContext jaxbContext;
-
+//TODO why are we not using mandate id, mandate sinagture date, creditor identifier here, may I understanding them wrong.
 	public WirecardClient(String url, String username, String password, String merchantId) {
 		this.url = url;
 		this.merchantId = merchantId;

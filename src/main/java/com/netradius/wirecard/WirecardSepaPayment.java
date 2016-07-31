@@ -1,6 +1,7 @@
 package com.netradius.wirecard;
 
 import com.netradius.wirecard.schema.*;
+import com.netradius.wirecard.util.StringUtils;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -52,6 +53,42 @@ public class WirecardSepaPayment {
 	protected String lastName;
 
 	/**
+	 * Account holder's city.
+	 * This field is optional.
+	 */
+	private String city;
+
+	/**
+	 * The account's holder state.
+	 * This is optional.
+	 */
+	private String state;
+
+	/**
+	 * The account's holder address street1.
+	 * This is optional.
+	 */
+	private String street1;
+
+	/**
+	 * The account's holder email street2.
+	 * This is optional.
+	 */
+	private String street2;
+
+	/**
+	 * Account holder's country.
+	 * This field is optional.
+	 */
+	private String country;
+
+	/**
+	 * Account holder's postal code.
+	 * This field is optional.
+	 */
+	private String postalCode;
+
+	/**
 	 * The bank account number.
 	 * This is a required field.
 	 */
@@ -75,6 +112,70 @@ public class WirecardSepaPayment {
 	 */
 	protected Date signedDate;
 
+	/**
+	 * The date on which funds will be transferred.
+	 * This is a optional field.
+	 */
+	protected Date dueDate;
+
+	/**
+	 * The transaction ID of the first transaction.
+	 * This is a optional field.
+	 */
+	protected String  parentTransactionId;
+
+	/**
+	 * The description of the transaction.
+	 * This is optional, maximum 100 characters allowed.
+	 */
+	protected String description;
+
+	/**
+	 * The account's holder email address.
+	 * This is optional.
+	 */
+	private String email;
+
+	/**
+	 * The account's holder phone.
+	 * This is optional.
+	 */
+	private String phone;
+
+	/**
+	 * The account's holder social security.
+	 * This is optional.
+	 */
+	private String ssn;
+
+	/**
+	 * The account's holder email dateOfBirth.
+	 * This is optional.
+	 */
+	private Date dateOfBirth;
+
+	/**
+	 * The notification email to receive the notifications.
+	 * The url must be https.
+	 *
+	 * To receive the notification either notificationURL or notificationEmail must be not null.
+	 */
+	private String notificationEmail;
+
+	/**
+	 * The notification url to post the notifications.
+	 * The url must be https.
+	 *
+	 * To receive the notification either notificationURL or notificationEmail must be not null.
+	 */
+	private String notificationURL;
+
+	/**
+	 * The transaction state for which notification to received.
+	 * The value can be success or failure, can be null to receive to all notifications.
+	 */
+	private WirecardTransactionState notificationTransactionState;
+
 	protected WirecardSepaPayment(WirecardClient client) {
 		this.client = client;
 	}
@@ -89,6 +190,21 @@ public class WirecardSepaPayment {
 		AccountHolder accountHolder = new AccountHolder();
 		accountHolder.setFirstName(firstName);
 		accountHolder.setLastName(lastName);
+		if (dateOfBirth != null) {
+			accountHolder.setDateOfBirth(new SimpleDateFormat("yyyy-MM-dd").format(dateOfBirth));
+		}
+		accountHolder.setEmail(email);
+		accountHolder.setPhone(phone);
+		accountHolder.setSocialSecurityNumber(ssn);
+
+		Address address = new Address();
+		address.setCity(city);
+		address.setCountry(country);
+		address.setPostalCode(postalCode);
+		address.setState(state);
+		address.setStreet1(street1);
+		address.setStreet2(street2);
+		accountHolder.setAddress(address);
 		payment.setAccountHolder(accountHolder);
 
 		BankAccount bankAccount = new BankAccount();
@@ -116,15 +232,32 @@ public class WirecardSepaPayment {
 		payment.setCreditorId(creditorId);
 		payment.setRequestId(requestId);
 
+		if (StringUtils.hasText(notificationEmail) || StringUtils.hasText(notificationURL)) {
+			Notification notification = new Notification();
+			if (notificationTransactionState != null) {
+				notification.setTransactionState(TransactionState.fromValue(notificationTransactionState.value()));
+			}
+			notification.setUrl(notificationURL);
+			if (StringUtils.hasText(notificationEmail)) {
+				notification.setUrl("mailto:" + notificationEmail);
+			}
+
+			Notifications notifications = new Notifications();
+			notifications.getNotification().add(notification);
+			payment.setNotifications(notifications);
+		}
+
 		ObjectFactory objectFactory = new ObjectFactory();
 		JAXBElement<Payment> jaxbElement = objectFactory.createPayment(payment);
 		Payment result = client.httpClient.postEntity(client.url, Payment.class, jaxbElement);
 
 		// TODO We will want to abstract this once we add support for other payment types
 		WirecardPaymentResponse response = new WirecardPaymentResponse();
-		response.setTransactionId(response.getTransactionId());
-		response.setTransactionState(response.getTransactionState());
-		response.setCompletionDate(response.getCompletionDate());
+		response.setTransactionId(result.getTransactionId());
+		response.setTransactionState(WirecardTransactionState.fromValue(result.getTransactionState().toString()));
+		response.setCompletionDate(result.getCompletionTimeStamp().toGregorianCalendar().getTime());
+		response.setProviderTransactionReferenceId(result.getProviderTransactionReferenceId());
+//		response.setTransactionType(TransactionType.valueOf(result.getTransactionType()));//TODP
 		response.setStatuses(result.getStatuses().getStatus().stream()
 				.map(s -> (new WirecardPaymentStatus(s.getCode(), s.getDescription(), s.getSeverity().value())))
 				.collect(Collectors.toCollection(ArrayList::new)));

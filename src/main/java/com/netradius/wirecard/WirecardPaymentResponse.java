@@ -11,13 +11,17 @@ import java.util.List;
 @Data
 public class WirecardPaymentResponse {
 
+//	TODO
+//	provider-transaction-reference-id
+	private String providerTransactionReferenceId;
 	private String transactionId;
-	private String transactionState;
+	private WirecardTransactionState transactionState;
+	private String transactionType;
 	private Date completionDate;
 	private List<WirecardPaymentStatus> statuses;
 
 	public boolean isSuccess() {
-		return transactionState.equals("success");
+		return transactionState.equals(WirecardTransactionState.SUCCESS);
 	}
 
 }

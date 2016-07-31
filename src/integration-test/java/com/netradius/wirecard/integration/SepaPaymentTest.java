@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
 
+import static org.junit.Assert.assertTrue;
+
 /**
  * Integration test for sepa transactions.
  *
@@ -34,7 +36,9 @@ public class SepaPaymentTest {
 				.setMandateId("12345678") // from examples in doc
 				.setSignedDate(new Date())
 				.setAmount(new BigDecimal("1.00"))
+				.setNotificationEmail("abhinavnahar@gmail.com")
 				.submit();
+		assertTrue(response.isSuccess());
 	}
 
 }
