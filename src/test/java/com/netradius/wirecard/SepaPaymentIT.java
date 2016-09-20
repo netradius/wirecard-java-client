@@ -1,7 +1,6 @@
-package com.netradius.wirecard.integration;
+package com.netradius.wirecard;
 
-import com.netradius.wirecard.WirecardClient;
-import com.netradius.wirecard.WirecardPaymentResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -16,7 +15,8 @@ import static org.junit.Assert.assertTrue;
  *
  * @author Erik R. Jensen
  */
-public class SepaPaymentTest {
+@Slf4j
+public class SepaPaymentIT {
 
 	// The following values came from the wirecard-payment-processing-api-1.5.1.pdf file
 	private static final String username = "70000-APITEST-AP";
@@ -25,6 +25,7 @@ public class SepaPaymentTest {
 
 	@Test
 	public void testSepa() throws IOException {
+		log.info("Testing SEPA Payment");
 		WirecardClient client = new WirecardClient(WirecardClient.TESTING_URL, username, password, merchantId);
 		WirecardPaymentResponse response = client.newSepaPayment()
 				.setRequestId(UUID.randomUUID().toString()) // random request ID
