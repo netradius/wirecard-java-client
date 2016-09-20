@@ -215,6 +215,18 @@
 							</sources>
 						</configuration>
 					</execution>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>target/generated-sources</source>
+							</sources>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 			<plugin>
@@ -223,6 +235,7 @@
 				<version>${jaxb2-maven-plugin.version}</version>
 				<executions>
 					<execution>
+						<phase>generate-sources</phase>
 						<id>xjc</id>
 						<goals>
 							<goal>xjc</goal>
