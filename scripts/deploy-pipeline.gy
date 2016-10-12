@@ -1,0 +1,18 @@
+node {
+	def mvnHome = tool 'M3'
+	stage('Preparation') {
+		git 'git@github.com:netradius/wirecard-java-client.git'
+	}
+	stage('Build') {
+		sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
+	}
+	stage('Results') {
+		junit '**/target/surefire-reports/TEST-*.xml'
+		archive 'target/*.jar'
+	}
+	if (currentBuild.result == null) { // Only build if we haven't failed or gone unstable
+		stage('Deploy') {
+			sh "'${mvnHome}/bin/mvn' -DskipTests deploy"
+		}
+	}
+}
