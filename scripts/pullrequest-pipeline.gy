@@ -1,0 +1,36 @@
+node {
+	def mvnHome = tool 'M3'
+	def pullRequestUrl = "https://deployer.netradius.net/api/repos/github/${OWNER}/${REPO}/pulls/${PULLREQUEST}".toString()
+	stage('Preparation') {
+		git 'git@github.com:netradius/wirecard-java-client.git'
+	}
+	stage('Test Merge') {
+		sh 'git pull origin master'
+		sh 'git fetch -p'
+		def status = sh(script: 'git merge --no-commit origin/${BRANCH} ${REVISION}', returnStatus: true)
+		if (status != 0) {
+			println("Merge status code: " + status)
+			currentBuild.result = 'FAILURE'
+			def response = httpRequest "${pullRequestUrl}/comment?key=0d7b4f552ce847a194437f6929c2236b&comment=Merge+failed"
+			println('Status: ' + response.status)
+		}
+		sh('git status')
+	}
+	if (currentBuild.result == null) { // Only build if we haven't failed or gone unstable
+		stage('Build') {
+			sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
+		}
+		stage('Results') {
+			junit '**/target/surefire-reports/TEST-*.xml'
+		}
+	}
+	if (currentBuild.result == null) { // Only build if we haven't failed or gone unstable
+		stage('Merge') {
+			def response = httpRequest "${pullRequestUrl}/merge?key=0d7b4f552ce847a194437f6929c2236b&"
+			println('Status: ' + response.status)
+		}
+	} else {
+		def response = httpRequest "${pullRequestUrl}/comment?key=0d7b4f552ce847a194437f6929c2236b&comment=Build+failed"
+		println('Status: ' + response.status)
+	}
+}
