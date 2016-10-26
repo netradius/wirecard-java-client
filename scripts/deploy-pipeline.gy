@@ -1,18 +1,27 @@
 node {
-	def mvnHome = tool 'M3'
-	stage('Preparation') {
-		git 'git@github.com:netradius/wirecard-java-client.git'
-	}
-	stage('Build') {
-		sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
-	}
-	stage('Results') {
-		junit '**/target/surefire-reports/TEST-*.xml'
-		archive 'target/*.jar'
-	}
-	if (currentBuild.result == null) { // Only build if we haven't failed or gone unstable
-		stage('Deploy') {
-			sh "'${mvnHome}/bin/mvn' -DskipTests deploy"
+	def actor = "<a href=\"${ACTOR_URL}\"><img title=\"${ACTOR_DISPLAY}\" src=\"${ACTOR_AVATAR}\" width=\"32\" /></a>"
+	def jenkinsBuild = "${env.JOB_NAME} <a href=\\\"${env.BUILD_URL}\\\">#${env.BUILD_NUMBER}</a>"
+	hipchatSend color: "GRAY", notify: false, message: "${actor} Job Started: ${jenkinsBuild}"
+	try {
+		def mvnHome = tool 'M3'
+		stage('Preparation') {
+			git 'git@github.com:netradius/wirecard-java-client.git'
 		}
+		stage('Build') {
+			sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
+		}
+		stage('Results') {
+			junit '**/target/surefire-reports/TEST-*.xml'
+			archive 'target/*.jar'
+		}
+		if (currentBuild.result == null) { // Only build if we haven't failed or gone unstable
+			stage('Deploy') {
+				sh "'${mvnHome}/bin/mvn' -DskipTests deploy"
+				hipchatSend color: "GREEN", notify: true, message: "${actor} Job Success: ${jenkinsBuild}"
+			}
+		}
+	} catch (err) {
+		hipchatSend color: "RED", notify: true, message: "${actor} Job Failed: ${jenkinsBuild}"
+		throw err;
 	}
 }
