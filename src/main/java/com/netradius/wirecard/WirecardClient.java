@@ -11,19 +11,16 @@ import javax.xml.bind.JAXBException;
  * @author Erik R. Jensen
  */
 public class WirecardClient {
-	//TODO we need to support authorize transaction?
+
 	public static final String TESTING_URL = "https://api-test.wirecard.com/engine/rest/paymentmethods/";
 	public static final String PRODUCTION_URL = "https://api.wirecard.com/engine/rest/paymentmethods/";
 
 	protected String url;
 	protected HttpClient httpClient;
-	protected String merchantId;
+	protected String merchantAccountId;
 	protected JAXBContext jaxbContext;
-//TODO why are we not using mandate id, mandate sinagture date, creditor identifier here, may I understanding them wrong.
-	public WirecardClient(String url, String username, String password, String merchantId) {
-		this.url = url;
-		this.merchantId = merchantId;
-		httpClient = new HttpURLConnectionClient(username, password);
+
+	protected void initJaxb() {
 		try {
 			jaxbContext = JAXBContext.newInstance(Payment.class);
 		} catch (JAXBException x) {
@@ -31,8 +28,31 @@ public class WirecardClient {
 		}
 	}
 
-	public WirecardSepaPayment newSepaPayment() {
-		return new WirecardSepaPayment(this);
+	public WirecardClient(String url, String username, String password, String merchantAccountId) {
+		this.url = url;
+		this.merchantAccountId = merchantAccountId;
+		httpClient = new HttpURLConnectionClient(username, password);
+		initJaxb();
+	}
+
+	public WirecardSepaDebit newSepaDebit() {
+		return new WirecardSepaDebit(this);
+	}
+
+	public WirecardSepaVoidDebit newSepaVoidDebit() {
+		return new WirecardSepaVoidDebit(this);
+	}
+
+	public WirecardSepaAuth newSepaAuth() {
+		return new WirecardSepaAuth(this);
+	}
+
+	public WirecardSepaCredit newSepaCredit() {
+		return new WirecardSepaCredit(this);
+	}
+
+	public WirecardSepaVoidCredit newSepaVoidCredit() {
+		return new WirecardSepaVoidCredit(this);
 	}
 
 }
