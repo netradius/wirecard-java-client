@@ -25,7 +25,7 @@ node() {
 		}
 		if (currentBuild.result == null) { // Only build if we haven't failed or gone unstable
 			stage('Build') {
-				sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
+				sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean verify package"
 			}
 			stage('Results') {
 				junit '**/target/surefire-reports/TEST-*.xml'
