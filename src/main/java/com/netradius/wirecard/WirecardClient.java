@@ -55,4 +55,27 @@ public class WirecardClient {
 		return new WirecardSepaVoidCredit(this);
 	}
 
+	public WirecardCreditCardPurchase newCreditCardPurchase() {
+		return new WirecardCreditCardPurchase(this);
+	}
+
+	public WirecardCreditCardAuth newCreditCardAuth() {
+		return new WirecardCreditCardAuth(this);
+	}
+
+	public WirecardCreditCardCapture newCreditCardCapture() {
+		return new WirecardCreditCardCapture(this);
+	}
+
+	public WirecardCreditCardRefundCapture newCreditCardRefundCapture() {
+		return new WirecardCreditCardRefundCapture(this);
+	}
+
+	public WirecardCreditCardRefundPurchase newCreditCardRefundPurchase() {
+		return new WirecardCreditCardRefundPurchase(this);
+	}
+
+	public WirecardCreditCardVoidAuth newCreditCardVoidAuth() {
+		return new WirecardCreditCardVoidAuth(this);
+	}
 }
