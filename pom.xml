@@ -39,13 +39,13 @@
 	<distributionManagement>
 		<repository>
 			<id>netradius-releases</id>
-			<name>NetRadius Releases Repository</name>
-			<url>https://mirrors.netradius.com/nexus/content/repositories/releases</url>
+			<name>Netradius Release Repository</name>
+			<url>https://nexus.netradius.net/repository/netradius-releases</url>
 		</repository>
 		<snapshotRepository>
 			<id>netradius-snapshots</id>
-			<name>NetRadius Snapshots Repository</name>
-			<url>https://mirrors.netradius.com/nexus/content/repositories/snapshots</url>
+			<name>Netradius Snapshots Repository</name>
+			<url>https://nexus.netradius.net/repository/netradius-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 	<dependencies>
@@ -163,60 +163,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<repositories>
-		<repository>
-			<id>netradius-public-releases</id>
-			<name>NetRadius Public Release Repository</name>
-			<url>http://mirrors.netradius.com/nexus/content/groups/public</url>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>daily</updatePolicy>
-				<checksumPolicy>warn</checksumPolicy>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>netradius-public-snapshots</id>
-			<name>NetRadius Public Snapshot Repository</name>
-			<url>https://mirrors.netradius.com/nexus/content/groups/public-snapshots</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-				<checksumPolicy>warn</checksumPolicy>
-			</snapshots>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>netradius-public-releases</id>
-			<name>NetRadius Public Release Repository</name>
-			<url>http://mirrors.netradius.com/nexus/content/groups/public</url>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>daily</updatePolicy>
-				<checksumPolicy>warn</checksumPolicy>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-		<pluginRepository>
-			<id>netradius-public-snapshots</id>
-			<name>NetRadius Public Snapshot Repository</name>
-			<url>https://mirrors.netradius.com/nexus/content/groups/public-snapshots</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-				<checksumPolicy>warn</checksumPolicy>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
 </project>
