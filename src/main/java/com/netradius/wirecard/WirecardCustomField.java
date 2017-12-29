@@ -6,7 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import static com.netradius.wirecard.util.ValidationUtils.*;
+import static com.netradius.wirecard.util.ValidationUtils.checkForNull;
+import static com.netradius.wirecard.util.ValidationUtils.checkMaxLength;
 
 /**
  * Wirecard’s Payment Gateway also permits the storage and later retrieval of additional
@@ -21,31 +22,31 @@ import static com.netradius.wirecard.util.ValidationUtils.*;
 @NoArgsConstructor
 public class WirecardCustomField implements Validated {
 
-	/**
-	 * The name of the custom field.
-	 * This field is optional and limited to 36 characters.
-	 */
-	protected String name;
+  /**
+   * The name of the custom field.
+   * This field is optional and limited to 36 characters.
+   */
+  protected String name;
 
-	/**
-	 * The value of the custom field.
-	 * This field is optional and limited to 256 characters.
-	 */
-	protected String value;
+  /**
+   * The value of the custom field.
+   * This field is optional and limited to 256 characters.
+   */
+  protected String value;
 
-	@Override
-	public void validate() {
-		checkForNull(name);
-		checkMaxLength(name, 36);
-		checkForNull(value);
-		checkMaxLength(value, 256);
-	}
+  @Override
+  public void validate() {
+    checkForNull(name);
+    checkMaxLength(name, 36);
+    checkForNull(value);
+    checkMaxLength(value, 256);
+  }
 
-	protected CustomField getCustomField() {
-		validate();
-		CustomField customField = new CustomField();
-		customField.setFieldName(name);
-		customField.setFieldValue(value);
-		return customField;
-	}
+  protected CustomField getCustomField() {
+    validate();
+    CustomField customField = new CustomField();
+    customField.setFieldName(name);
+    customField.setFieldValue(value);
+    return customField;
+  }
 }
