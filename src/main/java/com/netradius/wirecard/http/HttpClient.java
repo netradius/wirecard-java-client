@@ -1,8 +1,8 @@
 package com.netradius.wirecard.http;
 
-import javax.xml.bind.JAXBElement;
 import java.io.IOException;
 import java.io.Serializable;
+import javax.xml.bind.JAXBElement;
 
 /**
  * Contract for all HttpClient implementations.
@@ -12,6 +12,6 @@ import java.io.Serializable;
  */
 public interface HttpClient extends Serializable {
 
-	<T> T postEntity(String url, Class<T> type, JAXBElement<T> entity) throws IOException;
+  <T> T postEntity(String url, Class<T> type, JAXBElement<T> entity) throws IOException;
 
 }

@@ -91,8 +91,8 @@
 			<xs:enumeration value="debit-return-unsucc-rep"/>
 			<xs:enumeration value="debit-return-succ-rep"/>
 			<xs:enumeration value="authorization-only"/>
-			<xs:enumeration value="void-debit"/>			
-			<xs:enumeration value="pending-void-credit"/>			
+			<xs:enumeration value="void-debit"/>
+			<xs:enumeration value="pending-void-credit"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="transaction-state">
